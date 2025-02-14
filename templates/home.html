@@ -1,0 +1,187 @@
+{% extends "base.html" %}
+
+{% block title %}Home | PMDCS{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<div class="hero-section">
+    <h1 class="hero-title">Patient Medical Data Connect System in INDIA</h1>
+    <p class="hero-subtitle">
+        A Cloud-Based Solution for Seamless & Secure Patient Data Management
+    </p>
+
+    <div class="hero-btns">
+        <a href="/book_appointment" class="btn btn-warning">Book Appointment</a>
+        <a href="/about" class="btn btn-outline-light">Learn More</a>
+    </div>
+</div>
+
+<!-- Features Overview -->
+<div class="container mt-5 text-center">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="info-card">
+                <img src="/static/images/admin.png" alt="Admin">
+                <h5>Admin</h5>
+                <p>Manage users, hospitals & doctors.</p>
+                <a href="/admin_dashboard" class="btn btn-dark">View</a>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="info-card">
+                <img src="/static/images/doctor.png" alt="Doctor">
+                <h5>Doctor</h5>
+                <p>Access patient records & manage appointments.</p>
+                <a href="/doctor_dashboard" class="btn btn-dark">View</a>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="info-card">
+                <img src="/static/images/patient.png" alt="Patient">
+                <h5>Patient</h5>
+                <p>Track your health data securely.</p>
+                <a href="/patient_dashboard" class="btn btn-dark">View</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- About the Project -->
+<div class="project-details">
+    <p>
+        Our system leverages <strong>Cloud Computing</strong> to ensure secure, real-time access to
+        patient medical records. By integrating cutting-edge data analytics, we empower doctors,
+        hospitals, and patients to make informed healthcare decisions effortlessly.
+    </p>
+</div>
+
+<!-- Meet the Team -->
+<div class="team-section">
+    <h2>Meet Our Team 👨‍💻</h2>
+    <div class="row justify-content-center">
+        <div class="col-md-3">
+            <div class="team-card">
+                <h5>P. Narendra</h5>
+                <p>Cloud Integration & Backend</p>
+                <span>Reg. No: 21701A05A6</span>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="team-card">
+                <h5>S. Madhava</h5>
+                <p>Database & API Management</p>
+                <span>Reg. No: 21701A0573</span>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="team-card">
+                <h5>M. Moksha</h5>
+                <p>Frontend Development & UI Design</p>
+                <span>Reg. No: 21701A0591</span>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="team-card">
+                <h5>B. Narendra Babu</h5>
+                <p>Security & Cloud Infrastructure</p>
+                <span>Reg. No: 21701A05A5</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Hero Section */
+    .hero-section {
+        background: linear-gradient(135deg, #1a2a38, #263645);
+        color: white;
+        text-align: center;
+        padding: 80px 20px;
+        border-radius: 15px;
+    }
+
+    .hero-title {
+        font-weight: bold;
+        font-size: 2.5rem;
+    }
+
+    .hero-subtitle {
+        font-size: 1.2rem;
+        margin-bottom: 20px;
+        opacity: 0.8;
+    }
+
+    .hero-btns a {
+        margin: 10px;
+        font-size: 18px;
+        padding: 10px 20px;
+        border-radius: 8px;
+    }
+
+    /* Feature Cards */
+    .info-card {
+        background: rgba(255, 255, 255, 0.2);
+        padding: 20px;
+        border-radius: 15px;
+        text-align: center;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        backdrop-filter: blur(10px);
+        transition: all 0.3s ease-in-out;
+    }
+
+    .info-card img {
+        width: 80px;
+        margin-bottom: 15px;
+    }
+
+    .info-card:hover {
+        transform: scale(1.05);
+        box-shadow: 0 8px 20px rgba(255, 255, 255, 0.2);
+    }
+
+    /* Project Details */
+    .project-details {
+        text-align: center;
+        background: rgba(255, 255, 255, 0.15);
+        padding: 30px;
+        border-radius: 15px;
+        margin-top: 50px;
+    }
+
+    /* Team Section */
+    .team-section {
+        text-align: center;
+        margin-top: 50px;
+    }
+
+    .team-section h2 {
+        font-weight: bold;
+        margin-bottom: 30px;
+    }
+
+    .team-card {
+        background: rgba(255, 255, 255, 0.2);
+        padding: 20px;
+        border-radius: 15px;
+        text-align: center;
+        backdrop-filter: blur(10px);
+        transition: all 0.3s ease-in-out;
+    }
+
+    .team-card h5 {
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+
+    .team-card span {
+        display: block;
+        font-size: 14px;
+        opacity: 0.8;
+    }
+
+    .team-card:hover {
+        transform: scale(1.05);
+    }
+</style>
+
+{% endblock %}

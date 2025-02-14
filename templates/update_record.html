@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}Update Record{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1>Update Record</h1>
+
+    <!-- Record Update Form -->
+    <form method="POST" action="{{ url_for('update_record', record_id=record.id) }}">
+        {{ form.hidden_tag() }}
+        <div class="mb-3">
+            {{ form.diagnosis.label }} {{ form.diagnosis(class="form-control") }}
+        </div>
+        <div class="mb-3">
+            {{ form.treatment_plan.label }} {{ form.treatment_plan(class="form-control") }}
+        </div>
+        <div class="mb-3">
+            {{ form.date_of_visit.label }} {{ form.date_of_visit(class="form-control") }}
+        </div>
+        <button type="submit" class="btn btn-success">Update Record</button>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}Manage Patient Records{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1>Manage Records for Patient: {{ patient_id }}</h1>
+
+    <!-- Medical Records -->
+    <h3>Medical Records</h3>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Hospital</th>
+                <th>Doctor</th>
+                <th>Diagnosis</th>
+                <th>Treatment Plan</th>
+                <th>Date of Visit</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for record in records %}
+            <tr>
+                <td>{{ record.hospital.name }}</td>
+                <td>{{ record.doctor_name }}</td>
+                <td>{{ record.diagnosis }}</td>
+                <td>{{ record.treatment_plan }}</td>
+                <td>{{ record.date_of_visit }}</td>
+                <td>
+                    <a href="{{ url_for('update_record', record_id=record.id) }}" class="btn btn-secondary">Update</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Link to Add New Record -->
+    <a href="{{ url_for('create_record', patient_id=patient_id) }}" class="btn btn-success">Add New Record</a>
+</div>
+{% endblock %}

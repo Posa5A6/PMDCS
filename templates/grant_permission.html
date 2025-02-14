@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}Grant Permission{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1>Grant Hospital Access to Doctor</h1>
+    <form method="POST">
+        {{ form.hidden_tag() }}
+        <div class="mb-3">
+            <label for="doctor_id" class="form-label">{{ form.doctor_id.label }}</label>
+            {{ form.doctor_id(class="form-control") }}
+        </div>
+        <div class="mb-3">
+            <label for="hospital_id" class="form-label">{{ form.hospital_id.label }}</label>
+            {{ form.hospital_id(class="form-control") }}
+        </div>
+        <button type="submit" class="btn btn-success">Grant Permission</button>
+    </form>
+</div>
+{% endblock %}

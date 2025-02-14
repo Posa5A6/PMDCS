@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block title %}Manage Hospitals{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1>Manage Hospitals</h1>
+    <a href="{{ url_for('add_hospital') }}" class="btn btn-primary mb-3">Add New Hospital</a>
+
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Hospital Name</th>
+                <th>Address</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for hospital in hospitals %}
+            <tr>
+                <td>{{ hospital.name }}</td>
+                <td>{{ hospital.address }}</td>
+                <td>
+                    <form action="{{ url_for('delete_hospital', hospital_id=hospital.id) }}" method="POST" style="display:inline;">
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

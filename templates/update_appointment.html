@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}Update Appointment{% endblock %}
+{% block content %}
+    <h1>Update Appointment</h1>
+    <form method="POST" action="{{ url_for('update_appointment', appointment_id=appointment.id) }}">
+        {{ form.hidden_tag() }}
+        <div class="mb-3">
+            {{ form.appointment_date.label(class="form-label") }}
+            {{ form.appointment_date(class="form-control", autocomplete="off") }} <!-- Disable autofill -->
+        </div>
+        <div class="mb-3">
+            {{ form.purpose_of_appointment.label(class="form-label") }}
+            {{ form.purpose_of_appointment(class="form-control", autocomplete="on") }} <!-- Enable autofill -->
+        </div>
+        <div class="mb-3">
+            {{ form.doctor_name.label(class="form-label") }}
+            {{ form.doctor_name(class="form-control", autocomplete="on") }}
+        </div>
+        <div class="mb-3">
+            {{ form.email.label(class="form-label") }}
+            {{ form.email(class="form-control", autocomplete="email") }} <!-- Email-specific autofill -->
+        </div>
+        <div class="mb-3">
+            {{ form.phone_number.label(class="form-label") }}
+            {{ form.phone_number(class="form-control", autocomplete="tel") }} <!-- Phone-specific autofill -->
+        </div>
+        <div class="mb-3">
+            {{ form.address.label(class="form-label") }}
+            {{ form.address(class="form-control", autocomplete="street-address") }} <!-- Address-specific autofill -->
+        </div>
+        <div class="mb-3">
+            {{ form.age.label(class="form-label") }}
+            {{ form.age(class="form-control", autocomplete="off") }}
+        </div>
+        <div class="mb-3">
+            {{ form.gender.label(class="form-label") }}
+            {{ form.gender(class="form-control", autocomplete="off") }}
+        </div>
+        <div class="mb-3">
+            {{ form.blood_group.label(class="form-label") }}
+            {{ form.blood_group(class="form-control", autocomplete="off") }}
+        </div>
+        <button type="submit" class="btn btn-primary">Update Appointment</button>
+    </form>
+{% endblock %}

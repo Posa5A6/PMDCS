@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Patient Record{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="edit-record-container">
+        <h1 class="text-center fw-bold">Edit Patient Record</h1>
+        <form method="POST" action="{{ url_for('edit_record', record_id=record.id) }}">
+            {{ form.hidden_tag() }}
+
+            <!-- Patient -->
+            <div class="mb-3">
+                <label for="patient" class="form-label">Patient</label>
+                <select name="patient_id" class="form-control input-glass" id="patient">
+                    {% for patient in form.patient_id.choices %}
+                    <option value="{{ patient[0] }}" {% if record.patient_id == patient[0] %} selected {% endif %}>
+                        {{ patient[1] }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- Doctor -->
+            <div class="mb-3">
+                <label for="doctor_name" class="form-label">{{ form.doctor_name.label }}</label>
+                {{ form.doctor_name(class="form-control input-glass") }}
+            </div>
+
+            <!-- Hospital -->
+            <div class="mb-3">
+                <label for="hospital_id" class="form-label">Hospital</label>
+                <select name="hospital_id" class="form-control input-glass" id="hospital">
+                    {% for hospital in form.hospital_id.choices %}
+                    <option value="{{ hospital[0] }}" {% if record.hospital_id == hospital[0] %} selected {% endif %}>
+                        {{ hospital[1] }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- Diagnosis -->
+            <div class="mb-3">
+                <label for="diagnosis" class="form-label">{{ form.diagnosis.label }}</label>
+                {{ form.diagnosis(class="form-control input-glass") }}
+            </div>
+
+            <!-- Treatment Plan -->
+            <div class="mb-3">
+                <label for="treatment_plan" class="form-label">{{ form.treatment_plan.label }}</label>
+                {{ form.treatment_plan(class="form-control input-glass") }}
+            </div>
+
+            <!-- Date of Visit -->
+            <div class="mb-3">
+                <label for="date_of_visit" class="form-label">{{ form.date_of_visit.label }}</label>
+                {{ form.date_of_visit(class="form-control input-glass") }}
+            </div>
+
+            <!-- Submit Button -->
+            <div class="text-center">
+                <button type="submit" class="btn btn-primary btn-lg w-100">
+                    <i class="fas fa-save"></i> Save Changes
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+    /* Glassmorphic Form Container */
+    .edit-record-container {
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(15px);
+        border-radius: 20px;
+        padding: 35px;
+        max-width: 700px;
+        margin: auto;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Glass Effect for Inputs */
+    .input-glass {
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        color: white;
+        transition: 0.3s ease-in-out;
+    }
+
+    .input-glass:focus {
+        background: rgba(255, 255, 255, 0.3);
+        border-color: white;
+        box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.4);
+    }
+
+    /* Placeholder Text Color */
+    .input-glass::placeholder {
+        color: rgba(255, 255, 255, 0.7);
+    }
+
+    /* Styling for Button */
+    .btn-primary {
+        background: linear-gradient(135deg, #007bff, #0056b3);
+        border: none;
+        padding: 12px;
+        border-radius: 10px;
+        font-size: 16px;
+        transition: 0.3s ease;
+    }
+
+    .btn-primary:hover {
+        background: linear-gradient(135deg, #0056b3, #003f7f);
+        transform: scale(1.05);
+    }
+
+</style>
+
+{% endblock %}

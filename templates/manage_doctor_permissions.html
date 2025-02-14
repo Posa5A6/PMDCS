@@ -1,0 +1,148 @@
+{% extends "base.html" %}
+
+{% block title %}Manage Doctor Permissions{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="permission-container">
+        <h1 class="text-center fw-bold">Manage Doctor Permissions</h1>
+
+        <!-- Grant Permission Form -->
+        <form method="POST" action="{{ url_for('manage_doctor_permissions') }}" class="mt-4">
+            <div class="mb-3">
+                <label for="doctor_id" class="form-label">Select Doctor</label>
+                <select name="doctor_id" id="doctor_id" class="form-control input-glass">
+                    {% for doctor in doctors %}
+                    <option value="{{ doctor.id }}">{{ doctor.username }} ({{ doctor.email }})</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label for="hospital_id" class="form-label">Select Hospital</label>
+                <select name="hospital_id" id="hospital_id" class="form-control input-glass">
+                    {% for hospital in hospitals %}
+                    <option value="{{ hospital.id }}">{{ hospital.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="text-center">
+                <button type="submit" class="btn btn-primary w-100">
+                    <i class="fas fa-user-plus"></i> Grant Permission
+                </button>
+            </div>
+        </form>
+
+        <hr class="my-4">
+
+        <!-- Existing Permissions Table -->
+        <h3 class="text-center mt-4">Existing Doctor Permissions</h3>
+        <div class="table-responsive">
+            <table class="table custom-table">
+                <thead>
+                    <tr>
+                        <th>Doctor</th>
+                        <th>Hospital</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for permission in permissions %}
+                    <tr>
+                        <td>{{ permission.doctor.username }}</td>
+                        <td>{{ permission.hospital.name }}</td>
+                        <td>
+                            <form method="POST" action="{{ url_for('revoke_permission', permission_id=permission.id) }}" style="display:inline;">
+                                <button type="submit" class="btn btn-danger btn-sm"
+                                    onclick="return confirm('Are you sure you want to revoke this permission?');">
+                                    <i class="fas fa-trash-alt"></i> Revoke
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Glassmorphic Container */
+    .permission-container {
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(15px);
+        border-radius: 20px;
+        padding: 35px;
+        max-width: 800px;
+        margin: auto;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Glass Effect for Inputs */
+    .input-glass {
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        color: white;
+        transition: 0.3s ease-in-out;
+    }
+
+    .input-glass:focus {
+        background: rgba(255, 255, 255, 0.3);
+        border-color: white;
+        box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.4);
+    }
+
+    /* Custom Table Styling */
+    .custom-table {
+        width: 100%;
+        border-radius: 10px;
+        overflow: hidden;
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(10px);
+    }
+
+    .custom-table th {
+        background: rgba(255, 255, 255, 0.3);
+        color: white;
+        text-align: center;
+        padding: 12px;
+    }
+
+    .custom-table td {
+        text-align: center;
+        padding: 12px;
+        color: white;
+    }
+
+    /* Button Styling */
+    .btn-primary {
+        background: linear-gradient(135deg, #007bff, #0056b3);
+        border: none;
+        padding: 12px;
+        border-radius: 10px;
+        font-size: 16px;
+        transition: 0.3s ease;
+    }
+
+    .btn-primary:hover {
+        background: linear-gradient(135deg, #0056b3, #003f7f);
+        transform: scale(1.05);
+    }
+
+    .btn-danger {
+        background: linear-gradient(135deg, #ff4b5c, #d91e36);
+        border: none;
+        transition: 0.3s ease-in-out;
+    }
+
+    .btn-danger:hover {
+        transform: scale(1.05);
+        background: linear-gradient(135deg, #d91e36, #b71828);
+    }
+
+</style>
+
+{% endblock %}

@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+
+{% block title %}Create Patient Record{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="form-container">
+        <h1 class="text-center fw-bold">Create New Patient Record</h1>
+        <form method="POST">
+            {{ form.hidden_tag() }}
+
+            <!-- Patient Selection -->
+            <div class="mb-3">
+                <label for="patient_id" class="form-label">{{ form.patient_id.label }}</label>
+                {{ form.patient_id(class="form-control input-glass") }}
+            </div>
+
+            <!-- Doctor Name -->
+            <div class="mb-3">
+                <label for="doctor_name" class="form-label">{{ form.doctor_name.label }}</label>
+                {{ form.doctor_name(class="form-control input-glass") }}
+            </div>
+
+            <!-- Hospital Selection -->
+            <div class="mb-3">
+                <label for="hospital_id" class="form-label">Hospital</label>
+                <select name="hospital_id" class="form-control input-glass" id="hospital">
+                    {% for hospital in hospitals %}
+                    <option value="{{ hospital.id }}">{{ hospital.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- Diagnosis -->
+            <div class="mb-3">
+                <label for="diagnosis" class="form-label">{{ form.diagnosis.label }}</label>
+                {{ form.diagnosis(class="form-control input-glass") }}
+            </div>
+
+            <!-- Treatment Plan -->
+            <div class="mb-3">
+                <label for="treatment_plan" class="form-label">{{ form.treatment_plan.label }}</label>
+                {{ form.treatment_plan(class="form-control input-glass") }}
+            </div>
+
+            <!-- Date of Visit -->
+            <div class="mb-3">
+                <label for="date_of_visit" class="form-label">{{ form.date_of_visit.label }}</label>
+                {{ form.date_of_visit(class="form-control input-glass") }}
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" class="btn btn-success btn-lg w-100">Save Record</button>
+        </form>
+    </div>
+</div>
+
+<style>
+    /* Glassmorphic Form Container */
+    .form-container {
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(15px);
+        border-radius: 20px;
+        padding: 30px;
+        max-width: 600px;
+        margin: auto;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Glass Effect for Inputs */
+    .input-glass {
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        color: white;
+        transition: 0.3s ease-in-out;
+    }
+
+    .input-glass:focus {
+        background: rgba(255, 255, 255, 0.3);
+        border-color: white;
+        box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.4);
+    }
+
+    /* Placeholder Text Color */
+    .input-glass::placeholder {
+        color: rgba(255, 255, 255, 0.7);
+    }
+
+    /* Styling for Button */
+    .btn-success {
+        background: linear-gradient(135deg, #28a745, #218838);
+        border: none;
+        padding: 12px;
+        border-radius: 10px;
+        font-size: 16px;
+        transition: 0.3s ease;
+    }
+
+    .btn-success:hover {
+        background: linear-gradient(135deg, #218838, #1e7e34);
+        transform: scale(1.05);
+    }
+
+</style>
+
+{% endblock %}

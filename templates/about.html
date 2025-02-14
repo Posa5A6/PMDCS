@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block title %}About Us{% endblock %}
+
+{% block content %}
+<div class="container text-center">
+    <div class="glass-container">
+        <h1 class="mb-4 fw-bold">About Our Healthcare Platform</h1>
+        <p class="lead">
+            PMDCS is a revolutionary healthcare platform designed to centralize patient data and enhance collaboration
+            between healthcare providers and patients. Our goal is to improve healthcare delivery by leveraging the
+            latest in technology.
+        </p>
+
+        <!-- Info Cards with Darkened Glassmorphism Effect -->
+        <div class="row mt-4 justify-content-center">
+            <div class="col-md-4">
+                <div class="card shadow-lg border-0 text-white p-4"
+                     style="background: rgba(0, 0, 0, 0.3); /* Slight Black Tint */
+                            backdrop-filter: blur(20px);
+                            border-radius: 18px;
+                            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;">
+                    <div class="card-body text-center">
+                        <h5 class="fw-bold"><span style="font-size: 1.5rem;">🚀</span> Our Mission</h5>
+                        <p class="small">We strive to create a seamless healthcare experience for both patients and providers.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card shadow-lg border-0 text-white p-4"
+                     style="background: rgba(0, 0, 0, 0.3); /* Slight Black Tint */
+                            backdrop-filter: blur(20px);
+                            border-radius: 18px;
+                            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;">
+                    <div class="card-body text-center">
+                        <h5 class="fw-bold"><span style="font-size: 1.5rem;">🌟</span> Our Vision</h5>
+                        <p class="small">To revolutionize healthcare by enabling better communication and data management.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card shadow-lg border-0 text-white p-4"
+                     style="background: rgba(0, 0, 0, 0.3); /* Slight Black Tint */
+                            backdrop-filter: blur(20px);
+                            border-radius: 18px;
+                            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;">
+                    <div class="card-body text-center">
+                        <h5 class="fw-bold"><span style="font-size: 1.5rem;">👨‍⚕️</span> Our Team</h5>
+                        <p class="small">A team of experts in healthcare, technology, and data science working together for a better tomorrow.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<footer>
+    this is pmdcs ......................
+</footer>
+<!-- Hover Effects -->
+<script>
+    document.querySelectorAll(".card").forEach(card => {
+        card.addEventListener("mouseover", () => {
+            card.style.transform = "scale(1.08)";
+            card.style.boxShadow = "0 10px 25px rgba(0, 0, 0, 0.4)";
+        });
+        card.addEventListener("mouseout", () => {
+            card.style.transform = "scale(1)";
+            card.style.boxShadow = "0 8px 20px rgba(0, 0, 0, 0.2)";
+        });
+    });
+</script>
+
+{% endblock %}

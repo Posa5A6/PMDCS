@@ -1,0 +1,28 @@
+<!-- patient_records.html -->
+{% extends "base.html" %}
+{% block title %}My Medical Records{% endblock %}
+{% block content %}
+    <h1>My Medical Records</h1>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Doctor</th>
+                <th>Hospital</th>
+                <th>Diagnosis</th>
+                <th>Treatment Plan</th>
+                <th>Date of Visit</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for record in records %}
+            <tr>
+                <td>{{ record.doctor_name }}</td>
+                <td>{{ record.hospital_name }}</td>
+                <td>{{ record.diagnosis }}</td>
+                <td>{{ record.treatment_plan }}</td>
+                <td>{{ record.date_of_visit }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

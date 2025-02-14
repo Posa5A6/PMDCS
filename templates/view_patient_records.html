@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}Patient Records{% endblock %}
+
+{% block content %}
+    <div class="container mt-5">
+        <h1>Patient Records</h1>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Patient</th>
+                    <th>Diagnosis</th>
+                    <th>Treatment Plan</th>
+                    <th>Date Created</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for record in records %}
+                <tr>
+                    <td>{{ record.patient.username }}</td>
+                    <td>{{ record.diagnosis }}</td>
+                    <td>{{ record.treatment_plan }}</td>
+                    <td>{{ record.date_created.strftime('%Y-%m-%d') }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

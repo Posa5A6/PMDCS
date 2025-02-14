@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+
+{% block title %}Contact Us{% endblock %}
+
+{% block content %}
+<div class="contact-container">
+    <div class="glass-box">
+        <h1 class="text-center fw-bold">Get in Touch</h1>
+        <p class="text-center text-light">Have questions or feedback? We're here to help.</p>
+
+        <div class="row mt-4">
+            <!-- Contact Information Section -->
+            <div class="col-md-6">
+                <h5 class="fw-bold text-light">📞 Contact Information</h5>
+                <p class="text-light">Reach out to us through the following ways:</p>
+                <ul class="list-unstyled text-light">
+                    <li><strong>Email:</strong> support@pmdcs.com</li>
+                    <li><strong>Phone:</strong> +123 456 7890</li>
+                    <li><strong>Address:</strong> 123 Healthcare St, Tech City</li>
+                </ul>
+            </div>
+
+            <!-- Contact Form Section -->
+            <div class="col-md-6">
+                <h5 class="fw-bold text-light">✉️ Send Us a Message</h5>
+                <form method="POST" action="{{ url_for('contact') }}">
+                    {{ form.hidden_tag() }}
+
+                    <div class="mb-3">
+                        <label class="form-label text-light">👤 Name</label>
+                        {{ form.name(class="form-control form-input", placeholder="Enter your name") }}
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label text-light">📧 Email</label>
+                        {{ form.email(class="form-control form-input", placeholder="Enter your email") }}
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label text-light">📝 Subject</label>
+                        {{ form.subject(class="form-control form-input", placeholder="Enter subject") }}
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label text-light">💬 Message</label>
+                        {{ form.message(class="form-control form-input", placeholder="Enter your message") }}
+                    </div>
+
+                    <button type="submit" class="btn btn-glass btn-block mt-3">Send Message</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Fullscreen Background */
+    .contact-container {
+        background: url('/static/images/contact-bg.jpg') no-repeat center center / cover;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    /* Glassmorphic Contact Box */
+    .glass-box {
+        background: rgba(0, 0, 0, 0.4); /* Darker Glass */
+        backdrop-filter: blur(18px);
+        padding: 35px;
+        border-radius: 18px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        width: 80%;
+        max-width: 800px;
+        text-align: center;
+    }
+
+    /* Input Fields */
+    .form-input {
+        background: rgba(255, 255, 255, 0.15);
+        border: 1px solid rgba(255, 255, 255, 0.4);
+        padding: 12px;
+        border-radius: 10px;
+        color: white;
+        font-size: 16px;
+        text-align: center;
+    }
+
+    .form-input::placeholder {
+        color: rgba(255, 255, 255, 0.7);
+    }
+
+    .form-input:focus {
+        border: 1px solid #ffde59;
+        outline: none;
+    }
+
+    /* Buttons */
+    .btn-glass {
+        background: rgba(255, 255, 255, 0.25);
+        color: white;
+        border: none;
+        border-radius: 12px;
+        padding: 12px;
+        width: 100%;
+        font-size: 16px;
+        transition: all 0.3s ease-in-out;
+    }
+
+    .btn-glass:hover {
+        background: rgba(255, 255, 255, 0.5);
+        transform: translateY(-3px);
+    }
+</style>
+{% endblock %}

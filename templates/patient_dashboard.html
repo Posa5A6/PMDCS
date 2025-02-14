@@ -1,0 +1,135 @@
+{% extends "base.html" %}
+{% block title %}Patient Dashboard{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="dashboard-container">
+        <h1 class="text-center fw-bold">Welcome, {{ current_user.username }}!</h1>
+
+        <div class="row justify-content-center">
+            <div class="col-md-5 col-sm-6 text-center">
+                <a href="{{ url_for('my_medical_history') }}" class="circle-btn glow-blue">
+                    <img src="/static/images/medical_records.png" class="circle-icon">
+                    <p>My Medical Records</p>
+                </a>
+            </div>
+
+            <div class="col-md-5 col-sm-6 text-center">
+                <a href="{{ url_for('book_appointment') }}" class="circle-btn glow-orange">
+                    <img src="/static/images/book_appointment.png" class="circle-icon">
+                    <p>Book an Appointment</p>
+                </a>
+            </div>
+        </div>
+
+        <div class="row justify-content-center mt-4">
+            <div class="col-md-5 col-sm-6 text-center">
+                <a href="{{ url_for('update_personal_info') }}" class="circle-btn glow-purple">
+                    <img src="/static/images/update_info.png" class="circle-icon">
+                    <p>Update Personal Info</p>
+                </a>
+            </div>
+
+            <div class="col-md-5 col-sm-6 text-center">
+                <a href="{{ url_for('view_appointments') }}" class="circle-btn glow-green">
+                    <img src="/static/images/appointments.png" class="circle-icon">
+                    <p>View My Appointments</p>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Dashboard Main Container */
+    .dashboard-container {
+        width: 90%;
+        max-width: 850px;
+        margin: auto;
+        background: rgba(30, 30, 30, 0.85); /* Lighter dark */
+        backdrop-filter: blur(12px);
+        padding: 40px;
+        border-radius: 20px;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2); /* Reduced shadow */
+        text-align: center;
+    }
+
+    /* Circular Buttons with Glow Effect */
+    .circle-btn {
+        display: block;
+        width: 170px;
+        height: 170px;
+        border-radius: 50%;
+        color: white;
+        font-weight: bold;
+        text-decoration: none;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        transition: all 0.3s ease-in-out;
+        margin: 20px auto;
+        position: relative;
+        overflow: hidden;
+        background-color: rgba(50, 50, 50, 0.9); /* Softer dark */
+        box-shadow: inset 0 0 15px rgba(255, 255, 255, 0.1);
+    }
+
+    .circle-btn:hover {
+        transform: scale(1.08);
+    }
+
+    /* Icons Inside Circles */
+    .circle-icon {
+        width: 65px;
+        height: 65px;
+        object-fit: contain;
+    }
+
+    /* Text in Circle */
+    .circle-btn p {
+        margin-top: 10px;
+        font-size: 15px;
+    }
+
+    /* Softer Neon Glow Colors */
+    .glow-blue::before, .glow-orange::before, .glow-purple::before, .glow-green::before {
+        content: '';
+        position: absolute;
+        width: 180px;
+        height: 180px;
+        border-radius: 50%;
+        z-index: -1;
+        filter: blur(20px);
+        opacity: 0.6; /* Reduced intensity */
+    }
+
+    .glow-blue::before {
+        background: rgba(0, 150, 255, 0.5);
+    }
+
+    .glow-orange::before {
+        background: rgba(255, 111, 60, 0.5);
+    }
+
+    .glow-purple::before {
+        background: rgba(120, 80, 200, 0.5);
+    }
+
+    .glow-green::before {
+        background: rgba(40, 200, 120, 0.5);
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .circle-btn {
+            width: 150px;
+            height: 150px;
+        }
+        .circle-icon {
+            width: 55px;
+            height: 55px;
+        }
+    }
+</style>
+{% endblock %}

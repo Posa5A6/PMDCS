@@ -1,0 +1,238 @@
+/* General Styles */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f8f9fa;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+body.dark-theme {
+    background-color: #121212;
+    color: #e0e0e0;
+}
+
+/* Navbar Styles */
+.navbar {
+    background-color: #ffffff;
+    padding: 15px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+body.dark-theme .navbar {
+    background-color: #1f1f1f;
+}
+
+.navbar-brand {
+    font-weight: bold;
+    font-size: 1.5rem;
+    color: #007bff;
+}
+
+body.dark-theme .navbar-brand {
+    color: #90caf9;
+}
+
+.navbar-nav .nav-item .nav-link {
+    font-weight: 600;
+    margin-right: 15px;
+    color: #007bff;
+}
+
+body.dark-theme .navbar-nav .nav-item .nav-link {
+    color: #90caf9;
+}
+
+/* Hero Section */
+.hero-section {
+    background-color: #007bff;
+    color: white;
+    text-align: center;
+    padding: 100px 0;
+    background-size: cover;
+    background-position: center;
+}
+
+body.dark-theme .hero-section {
+    background-color: #1f1f1f;
+}
+
+.hero-section h1 {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+}
+
+.hero-section .btn-primary {
+    padding: 10px 20px;
+    font-size: 1.2rem;
+    border-radius: 5px;
+}
+
+/* Cards Section */
+.card {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    background-color: #fff;
+}
+
+body.dark-theme .card {
+    background-color: #1f1f1f;
+    color: #e0e0e0;
+}
+
+.card-body {
+    padding: 20px;
+}
+
+.card-title {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+}
+
+/* Footer */
+.footer {
+    padding: 20px;
+    background-color: #343a40;
+    color: white;
+    text-align: center;
+}
+
+body.dark-theme .footer {
+    background-color: #1f1f1f;
+}
+
+/* Form Elements */
+.form-control {
+    background-color: #fff;
+    color: #333;
+}
+
+body.dark-theme .form-control {
+    background-color: #2e2e2e;
+    color: #e0e0e0;
+}
+
+.btn-primary {
+    background-color: #4a90e2;
+    border-color: #4a90e2;
+}
+
+body.dark-theme .btn-primary {
+    background-color: #357ab7;
+    border-color: #357ab7;
+}
+
+.card {
+    border-radius: 10px;
+    padding: 20px;
+}
+
+.card-title {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+}
+
+.card-text {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+/* Improved styling for the Contact Page */
+body {
+    background-image: url('/static/images/contact-background.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+}
+
+.card {
+    background-color: rgba(255, 255, 255, 0.95);  /* Light background for better contrast */
+    border-radius: 12px;
+    padding: 30px;
+    box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+h1 {
+    color: #007bff;
+    font-weight: bold;
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2); /* Text shadow for better visibility */
+}
+
+.form-control {
+    border-radius: 8px;
+    padding: 10px;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    border: none;
+    transition: background-color 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+}
+
+/*body::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.3);  /* Dark overlay
+    z-index: -1;
+}
+*/
+
+/* Custom Styles for About Page */
+h1 {
+    color: #007bff;
+    font-weight: bold;
+}
+
+.card {
+    border-radius: 10px;
+}
+
+.card-title {
+    font-weight: bold;
+    font-size: 1.5rem;
+}
+
+.card-text {
+    font-size: 1.1rem;
+}
+
+body {
+    background-color: #f8f9fa;
+}
+
+/* Sidebar styling */
+#sidebar {
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    padding-top: 20px;
+    background-color: #f8f9fa;
+}
+
+#sidebar .nav-link {
+    color: #333;
+    font-weight: bold;
+    padding: 15px;
+}
+
+#sidebar .nav-link.active {
+    background-color: #007bff;
+    color: white;
+}
+
+#sidebar .nav-link:hover {
+    background-color: #e9ecef;
+}
+
+#sidebar img {
+    border-radius: 50%;
+}

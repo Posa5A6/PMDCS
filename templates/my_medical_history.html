@@ -1,0 +1,38 @@
+<!-- my_medical_history.html -->
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h2 class="mt-4">My Medical History</h2>
+    <table class="table table-striped table-bordered mt-4">
+        <thead>
+            <tr>
+                <th>Doctor Name</th>
+                <th>Hospital</th>
+                <th>Diagnosis</th>
+                <th>Treatment Plan</th>
+                <th>Date of Visit</th>
+                <th>Date Created</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if records %}
+                {% for record in records %}
+                    <tr>
+                        <td>{{ record.doctor_name }}</td>
+                        <td>{{ record.hospital.name }}</td>
+                        <td>{{ record.diagnosis }}</td>
+                        <td>{{ record.treatment_plan }}</td>
+                        <td>{{ record.date_of_visit.strftime('%Y-%m-%d') }}</td>
+                        <td>{{ record.date_created.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                    </tr>
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <td colspan="6" class="text-center">No medical records found</td>
+                </tr>
+            {% endif %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

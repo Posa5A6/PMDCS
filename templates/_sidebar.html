@@ -1,0 +1,52 @@
+<!-- _sidebar.html -->
+<div class="d-flex flex-column flex-shrink-0 p-3 bg-light" style="width: 250px;">
+    <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none">
+        <img src="path_to_profile_picture" alt="Profile Picture" class="rounded-circle" style="width: 50px; height: 50px;">
+        <span class="fs-4 ms-2">{{ current_user.username }}</span>
+    </a>
+    <hr>
+    <ul class="nav nav-pills flex-column mb-auto">
+        <li class="nav-item">
+            <a href="{{ url_for('admin_dashboard') }}" class="nav-link {{ 'active' if request.endpoint == 'admin_dashboard' else '' }}">
+                Dashboard
+            </a>
+        </li>
+        <li>
+            <a href="{{ url_for('manage_users') }}" class="nav-link {{ 'active' if request.endpoint == 'manage_users' else '' }}">
+                User Management
+            </a>
+        </li>
+        <li>
+            <a href="{{ url_for('admin_appointment_management') }}" class="nav-link {{ 'active' if request.endpoint == 'admin_appointment_management' else '' }}">
+                Appointment Management
+            </a>
+        </li>
+        <li>
+            <a href="{{ url_for('admin_manage_records') }}" class="nav-link {{ 'active' if request.endpoint == 'admin_manage_records' else '' }}">
+                Patient Record Management
+            </a>
+        </li>
+        <li>
+            <a href="{{ url_for('create_record') }}" class="nav-link {{ 'active' if request.endpoint == 'create_record' else '' }}">
+                Add New Patient Record
+            </a>
+        </li>
+        <li>
+            <a href="{{ url_for('view_contact_messages') }}" class="nav-link {{ 'active' if request.endpoint == 'view_contact_messages' else '' }}">
+                Contact Messages and Feedback
+            </a>
+        </li>
+        <li>
+            <a href="{{ url_for('manage_hospitals') }}" class="nav-link {{ 'active' if request.endpoint == 'manage_hospitals' else '' }}">
+                Manage Hospitals
+            </a>
+        </li>
+        <li>
+            <a href="{{ url_for('manage_doctor_permissions') }}" class="nav-link {{ 'active' if request.endpoint == 'manage_doctor_permissions' else '' }}">
+                Manage Doctor Permissions
+            </a>
+        </li>
+    </ul>
+    <hr>
+    <a href="{{ url_for('logout') }}" class="btn btn-danger w-100">Logout</a>
+</div>
