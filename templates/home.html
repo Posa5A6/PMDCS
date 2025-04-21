@@ -59,31 +59,31 @@
 <div class="team-section">
     <h2>Meet Our Team 👨‍💻</h2>
     <div class="row justify-content-center">
-        <div class="col-md-3">
-            <div class="team-card">
+        <div class="col-md-3  d-flex">
+            <div class="team-card flex-fill">
                 <h5>P. Narendra</h5>
-                <p>Cloud Integration & Backend</p>
+                <p>Cloud Integration &amp; Backend</p>
                 <span>Reg. No: 21701A05A6</span>
             </div>
         </div>
-        <div class="col-md-3">
-            <div class="team-card">
+        <div class="col-md-3 d-flex">
+            <div class="team-card flex-fill">
                 <h5>S. Madhava</h5>
-                <p>Database & API Management</p>
+                <p>Database &amp; API Management</p>
                 <span>Reg. No: 21701A0573</span>
             </div>
         </div>
-        <div class="col-md-3">
-            <div class="team-card">
+        <div class="col-md-3 d-flex">
+            <div class="team-card flex-fill">
                 <h5>N. Moksha</h5>
-                <p>Frontend Development & UI Design</p>
+                <p>Frontend &amp; UI Design</p>
                 <span>Reg. No: 21701A0591</span>
             </div>
         </div>
-        <div class="col-md-3">
-            <div class="team-card">
+        <div class="col-md-3 d-flex">
+            <div class="team-card flex-fill">
                 <h5>B. Narendra Babu</h5>
-                <p>Security & Cloud Infrastructure</p>
+                <p>Security &amp; Cloud Infrastructure</p>
                 <span>Reg. No: 21701A05A5</span>
             </div>
         </div>
@@ -161,22 +161,34 @@
 
     .team-card {
         background: rgba(255, 255, 255, 0.2);
-        padding: 20px;
+        padding: 10px;
         border-radius: 15px;
         text-align: center;
         backdrop-filter: blur(10px);
         transition: all 0.3s ease-in-out;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-evenly;
+
     }
 
     .team-card h5 {
-        font-weight: bold;
+        font-size: 16px;
+        font-weight: 600;
         margin-bottom: 10px;
+        letter-spacing:1px;
     }
 
     .team-card span {
         display: block;
         font-size: 14px;
         opacity: 0.8;
+    }
+    .team-card p {
+        font-size: 14px;
+        margin-bottom: 10px;
+        width: 70%;
+        margin-inline: auto;
     }
 
     .team-card:hover {
