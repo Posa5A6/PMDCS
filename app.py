@@ -278,20 +278,34 @@ def register():
         return jsonify({"message": "Server error, please try again."}), 500
 
 
-# Login route
-@app.route('/login', methods=['GET', 'POST'])
+# Login route (API version)
+@app.route('/api/login', methods=['POST'])
 def login():
-    form = LoginForm()
-    if form.validate_on_submit():
-        user = User.query.filter_by(email=form.email.data).first()
-        if user and bcrypt.check_password_hash(user.password, form.password.data):  # Verify hashed password
-            login_user(user)
-            print(f"Logged in user's role: {user.role}")  # Debugging statement
-            flash('Login successful!', 'success')
-            return redirect(url_for('dashboard'))
-        else:
-            flash('Login failed. Please check your credentials and try again.', 'danger')
-    return render_template('login.html', form=form)
+    data = request.get_json()  # Get JSON data from the request
+
+    # Validate that email and password are provided
+    if not all(field in data for field in ('email', 'password')):
+        return jsonify({"message": "Email and password are required!"}), 400
+
+    # Find user by email
+    user = User.query.filter_by(email=data['email']).first()
+
+    if user and bcrypt.check_password_hash(user.password, data['password']):
+        # Check password against the hash
+        login_user(user)  # Assuming you're using Flask-Login for session management
+
+        # Respond with success and user details (you can send a JWT if needed)
+        return jsonify({
+            "message": "Login successful!",
+            "user": {
+                "username": user.username,
+                "email": user.email,
+                "role": user.role
+            }
+        }), 200
+    else:
+        # If login fails
+        return jsonify({"message": "Login failed. Please check your credentials and try again."}), 401
 
 
 # Dashboard route
