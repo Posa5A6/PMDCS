@@ -842,19 +842,30 @@ def doctor_edit_record(record_id):
         flash('You do not have access to this page.', 'danger')
         return redirect(url_for('index'))
 
-
-# Patient dashboard route
-@app.route('/patient_dashboard')
+@app.route('/api/patient/dashboard', methods=['GET'])
 @login_required
-def patient_dashboard():
+def api_patient_dashboard():
     user_role = current_user.role.lower()
-    print(f"Patient Dashboard accessed by user with role: {current_user.role}")  # Debugging statement
-    if user_role == ROLE_PATIENT:
-        return render_template('patient_dashboard.html')
-    else:
-        flash("Unauthorized access to Patient dashboard!", "danger")
-        return redirect(url_for('home'))
+    print(f"Patient Dashboard accessed by user with role: {current_user.role}")
 
+    if user_role == ROLE_PATIENT:
+        return jsonify({
+            "message": "Welcome to your Patient Dashboard",
+            "user": {
+                "username": current_user.username,
+                "email": current_user.email,
+                "role": user_role
+            },
+            "dashboard_data": {
+                "upcoming_appointments": [],  # Add real data later
+                "medical_reports": [],
+                "doctor_notes": []
+            }
+        }), 200
+    else:
+        return jsonify({
+            "error": "Unauthorized access. Only patients can view this dashboard."
+        }), 403
 
 @app.route('/book_appointment', methods=['GET', 'POST'])
 @login_required
