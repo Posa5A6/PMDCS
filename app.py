@@ -911,27 +911,26 @@ def api_book_appointment():
         return jsonify({"error": str(e)}), 500
 
 
-@app.route('/approve_appointment/<int:appointment_id>', methods=['POST'])
+@app.route('/api/doctor/approve-appointment/<int:appointment_id>', methods=['POST'])
 @login_required
-def approve_appointment(appointment_id):
-    user_role = current_user.role.lower()
-    if user_role != ROLE_DOCTOR:
-        flash("Unauthorized access!", "danger")
-        return redirect(url_for('dashboard'))
+def api_approve_appointment(appointment_id):
+    if current_user.role.lower() != ROLE_DOCTOR:
+        return jsonify({"error": "Unauthorized access! Only doctors can approve appointments."}), 403
 
     appointment = Appointment.query.get_or_404(appointment_id)
 
-    # Only allow the doctor assigned to approve the appointment
+    # Ensure the doctor can only approve their own appointment
     if appointment.doctor_name != current_user.username:
-        flash("You can only approve your own appointments.", "danger")
-        return redirect(url_for('doctor_dashboard'))
+        return jsonify({"error": "You can only approve your own appointments."}), 403
 
+    # Update status to 'Approved'
     appointment.status = 'Approved'
     db.session.commit()
 
-    flash('Appointment approved successfully!', 'success')
-    return redirect(url_for('doctor_dashboard'))
-
+    return jsonify({
+        "message": "Appointment approved successfully",
+        "appointment_id": appointment.id
+    }), 200
 
 @app.route('/view_appointments', methods=['GET'])
 @login_required
