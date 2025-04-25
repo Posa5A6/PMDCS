@@ -28,6 +28,9 @@ ROLE_DOCTOR = 'doctor'
 ROLE_PATIENT = 'patient'
 
 
+
+
+
 # User model
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
