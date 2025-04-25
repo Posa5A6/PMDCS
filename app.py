@@ -99,25 +99,22 @@ class PatientRecordForm(FlaskForm):
     submit = SubmitField('Save Record')
 
 
-
 class Appointment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     patient_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    doctor_name = db.Column(db.String(150), nullable=False)
-    hospital_id = db.Column(db.Integer, db.ForeignKey('hospital.id'), nullable=False)  # Add this line
+    doctor_name = db.Column(db.String(100), nullable=False)
+    hospital_id = db.Column(db.String(255), nullable=False)
     appointment_date = db.Column(db.Date, nullable=False)
     purpose_of_appointment = db.Column(db.String(255), nullable=False)
-    status = db.Column(db.String(50), default='Pending')
-    email = db.Column(db.String(150), nullable=False)
-    phone_number = db.Column(db.String(15), nullable=False)
+    email = db.Column(db.String(100), nullable=False)
+    phone_number = db.Column(db.String(20), nullable=False)
     address = db.Column(db.String(255), nullable=False)
     age = db.Column(db.Integer, nullable=False)
     gender = db.Column(db.String(10), nullable=False)
-    blood_group = db.Column(db.String(5), nullable=False)
+    blood_group = db.Column(db.String(10), nullable=False)
 
-    # Relationships
-    patient = db.relationship('User', backref='appointments')
-    hospital = db.relationship('Hospital', backref='appointments')  # Add this line for the relationship
+    def __repr__(self):
+        return f"<Appointment {self.id}>"
 
 
 
@@ -866,35 +863,53 @@ def api_patient_dashboard():
         return jsonify({
             "error": "Unauthorized access. Only patients can view this dashboard."
         }), 403
+    
 
-@app.route('/book_appointment', methods=['GET', 'POST'])
+
+@app.route('/api/patient/book-appointment', methods=['POST'])
 @login_required
-def book_appointment():
-    user_role = current_user.role.lower()
-    if user_role != ROLE_PATIENT:
-        flash("Only patients can book an appointment.", 'danger')
-        return redirect(url_for('dashboard'))
+def api_book_appointment():
+    if current_user.role.lower() != ROLE_PATIENT:
+        return jsonify({"error": "Only patients can book appointments"}), 403
 
-    form = AppointmentForm()
-    if form.validate_on_submit():
+    data = request.get_json()
+
+    try:
+        # Ensure doctor_id is an integer and valid
+        doctor_id = int(data.get('doctor_id'))  # Cast to integer
+        doctor = User.query.get(doctor_id)  # Retrieve doctor by ID
+        if not doctor:
+            return jsonify({"error": "Invalid doctor ID"}), 400
+
+        # Ensure age is an integer
+        age = int(data.get('age'))  # Cast age to integer
+        if age <= 0:
+            return jsonify({"error": "Invalid age value"}), 400
+
         appointment = Appointment(
             patient_id=current_user.id,
-            doctor_name=User.query.get(form.doctor_id.data).username,
-            hospital_id=form.hospital_id.data,
-            appointment_date=form.appointment_date.data,
-            purpose_of_appointment=form.purpose_of_appointment.data,
-            email=form.email.data,
-            phone_number=form.phone_number.data,
-            address=form.address.data,
-            age=int(form.age.data),
-            gender=form.gender.data,
-            blood_group=form.blood_group.data,
+            doctor_name=doctor.username,
+            hospital_id=data.get('hospital_id'),
+            appointment_date=data.get('appointment_date'),
+            purpose_of_appointment=data.get('purpose_of_appointment'),
+            email=data.get('email'),
+            phone_number=data.get('phone_number'),
+            address=data.get('address'),
+            age=age,  # Ensure age is an integer
+            gender=data.get('gender'),
+            blood_group=data.get('blood_group'),
         )
         db.session.add(appointment)
         db.session.commit()
-        flash('Appointment booked successfully!', 'success')
-        return redirect(url_for('view_appointments'))
-    return render_template('book_appointment.html', form=form)
+
+        return jsonify({
+            "message": "Appointment booked successfully",
+            "appointment_id": appointment.id
+        }), 201
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
 
 @app.route('/approve_appointment/<int:appointment_id>', methods=['POST'])
 @login_required
