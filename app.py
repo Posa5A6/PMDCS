@@ -11,6 +11,8 @@ from config import Config
 from datetime import datetime, date
 from sqlalchemy import func
 import psycopg2
+from flask import Flask, request, jsonify, flash, redirect, url_for
+
 
 app = Flask(__name__)
 app.config.from_object(Config)
@@ -233,30 +235,47 @@ def home():
     return render_template('home.html')
 
 
-# Registration route
-@app.route('/register', methods=['GET', 'POST'])
+
+# Registration route (API version)
+@app.route('/api/register', methods=['POST'])
 def register():
-    form = RegistrationForm()
-    if form.validate_on_submit():
-        existing_user = User.query.filter(
-            (User.username == form.username.data) |
-            (User.email == form.email.data)
-        ).first()
-        if existing_user:
-            flash('Username or Email already exists. Please try again.', 'danger')
-        else:
-            hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')  # Hash the password
-            user = User(
-                username=form.username.data,
-                email=form.email.data,
-                password=hashed_password,
-                role=form.role.data.lower()  # Store role in lowercase
-            )
-            db.session.add(user)
-            db.session.commit()
-            flash('Registration successful! Please login.', 'success')
-            return redirect(url_for('login'))
-    return render_template('register.html', form=form)
+    data = request.get_json()  # Get data from JSON body
+
+    # Validate that all required fields are present
+    if not all(field in data for field in ('username', 'email', 'password', 'role')):
+        return jsonify({"message": "Missing required fields!"}), 400
+
+    # Check if user already exists (by username or email)
+    existing_user = User.query.filter(
+        (User.username == data['username']) | 
+        (User.email == data['email'])
+    ).first()
+
+    if existing_user:
+        return jsonify({"message": "Username or Email already exists. Please try again."}), 400
+
+    # Hash the password before storing it
+    hashed_password = bcrypt.generate_password_hash(data['password']).decode('utf-8')
+
+    # Create new user instance
+    user = User(
+        username=data['username'],
+        email=data['email'],
+        password=hashed_password,
+        role=data['role'].lower()  # Store role in lowercase
+    )
+
+    try:
+        # Add user to the database and commit
+        db.session.add(user)
+        db.session.commit()
+
+        # Respond with success message
+        return jsonify({"message": "Registration successful! Please login."}), 201
+
+    except Exception as e:
+        # If an error occurs during saving to the database
+        return jsonify({"message": "Server error, please try again."}), 500
 
 
 # Login route
