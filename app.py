@@ -308,21 +308,40 @@ def login():
         return jsonify({"message": "Login failed. Please check your credentials and try again."}), 401
 
 
-# Dashboard route
-@app.route('/dashboard')
-@login_required
-def dashboard():
-    user_role = current_user.role.lower()
-    print(f"Dashboard accessed by user with role: {current_user.role}")  # Debugging statement
-    if user_role == ROLE_ADMIN:
-        return redirect(url_for('admin_dashboard'))
-    elif user_role == ROLE_DOCTOR:
-        return redirect(url_for('doctor_dashboard'))
-    elif user_role == ROLE_PATIENT:
-        return redirect(url_for('patient_dashboard'))
-    else:
-        return redirect(url_for('home'))
 
+@app.route('/api/dashboard', methods=['GET'])
+@login_required
+def api_dashboard():
+    user_role = current_user.role.lower()
+    print(f"Dashboard accessed by user with role: {current_user.role}")  # Debug
+
+    if user_role == ROLE_ADMIN:
+        return jsonify({
+            "message": "Welcome to the Admin Dashboard",
+            "role": user_role,
+            "redirect": "/api/admin/dashboard"
+        }), 200
+
+    elif user_role == ROLE_DOCTOR:
+        return jsonify({
+            "message": "Welcome to the Doctor Dashboard",
+            "role": user_role,
+            "redirect": "/api/doctor/dashboard"
+        }), 200
+
+    elif user_role == ROLE_PATIENT:
+        return jsonify({
+            "message": "Welcome to the Patient Dashboard",
+            "role": user_role,
+            "redirect": "/api/patient/dashboard"
+        }), 200
+
+    else:
+        return jsonify({
+            "message": "Unknown role. Redirecting to home.",
+            "role": user_role,
+            "redirect": "/"
+        }), 400
 
 @app.route('/admin_dashboard')
 @login_required
