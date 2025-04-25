@@ -118,6 +118,11 @@ class Appointment(db.Model):
     hospital = db.relationship('Hospital', backref='appointments')  # Add this line for the relationship
 
 
+
+
+
+
+
 # AppointmentForm (Updated with all required fields)
 class AppointmentForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()])
