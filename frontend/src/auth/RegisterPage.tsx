@@ -12,6 +12,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import { toast ,Toaster } from 'react-hot-toast';
 
 
 const RegisterPage : React.FC = () => {
@@ -27,8 +28,12 @@ const RegisterPage : React.FC = () => {
     try {
       console.log("registering");
       console.log(username, email, password, role);
-      await register(username, email, password,role);
-      navigate('/');
+      const {status, message} = await register(username, email, password,role);
+      if (status === 201) {
+        navigate('/');
+      }else {
+        toast.error(message);
+      }
     } catch (error) {
       console.error(error);
     }
@@ -36,6 +41,10 @@ const RegisterPage : React.FC = () => {
   const id = useId();
   return (
     <div className="h-screen w-screen  flex justify-center items-center">
+    <Toaster
+      position="top-right"
+      reverseOrder={false}
+    />
       <div className="w-72 mx-auto border  px-3 py-6 rounded-md">
         <h1 className="text-xl text-center font-semibold">Register</h1>
       <form className="space-y-5" onSubmit={handleRegister}>
