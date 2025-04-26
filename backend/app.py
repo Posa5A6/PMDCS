@@ -8,14 +8,31 @@ from wtforms.fields.datetime import DateField
 from wtforms.validators import DataRequired, Length, Email, EqualTo
 from flask_migrate import Migrate
 from config import Config
-from datetime import datetime, date
+from datetime import datetime, date, timedelta
 from sqlalchemy import func
 import psycopg2
 from flask import Flask, request, jsonify, flash, redirect, url_for
+from flask_cors import CORS
+import jwt
+
+
+# Secret key for encoding the JWT (keep it secure!)
+SECRET_KEY = 'your_super_secret_key'
+
+
+def generate_token(user_id):
+    payload = {
+        'user_id': user_id,
+        'exp': datetime.utcnow() + timedelta(days=1)  # Token expires in 1 day
+    }
+    token = jwt.encode(payload, SECRET_KEY, algorithm='HS256')
+    return token
+
 
 
 app = Flask(__name__)
 app.config.from_object(Config)
+CORS(app)
 
 db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)  # Initialize Bcrypt
@@ -237,7 +254,7 @@ def home():
 @app.route('/api/register', methods=['POST'])
 def register():
     data = request.get_json()  # Get data from JSON body
-
+    print(f"Received data: {data}")  # Debugging statement
     # Validate that all required fields are present
     if not all(field in data for field in ('username', 'email', 'password', 'role')):
         return jsonify({"message": "Missing required fields!"}), 400
@@ -249,7 +266,8 @@ def register():
     ).first()
 
     if existing_user:
-        return jsonify({"message": "Username or Email already exists. Please try again."}), 400
+        print(f"User already exists: {existing_user}")  # Debugging statement
+        return jsonify({"message": "Username or Email already exists."}), 400
 
     # Hash the password before storing it
     hashed_password = bcrypt.generate_password_hash(data['password']).decode('utf-8')
@@ -268,11 +286,20 @@ def register():
         db.session.commit()
 
         # Respond with success message
-        return jsonify({"message": "Registration successful! Please login."}), 201
+        token = generate_token(user.id)
+        return jsonify({
+            "message": "Registration successful.",
+            "token": token,
+            "user": {
+            "username": user.username,
+            "email": user.email,
+            "role": user.role
+        }
+        }), 201
 
     except Exception as e:
         # If an error occurs during saving to the database
-        return jsonify({"message": "Server error, please try again."}), 500
+        return jsonify({"message": "Server error."}), 500
 
 
 # Login route (API version)
@@ -292,17 +319,19 @@ def login():
         login_user(user)  # Assuming you're using Flask-Login for session management
 
         # Respond with success and user details (you can send a JWT if needed)
+        token = generate_token(user.id)
         return jsonify({
             "message": "Login successful!",
+            "token": token,
             "user": {
                 "username": user.username,
                 "email": user.email,
-                "role": user.role
+                "role": user.role,
             }
         }), 200
     else:
         # If login fails
-        return jsonify({"message": "Login failed. Please check your credentials and try again."}), 401
+        return jsonify({"message": "Invalid credentials."}), 401
 
 
 
