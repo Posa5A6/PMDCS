@@ -8,7 +8,7 @@ class Config:
     #SECRET_KEY = os.environ['SECRET_KEY']  # Assuming 'SECRET_KEY' is set on Vercel
 
     # PostgreSQL connection string
-    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or 'postgresql://postgres:1234@localhost/pmdcs'
+    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or 'postgresql://postgres:root@localhost/pmdcs'
     #SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL',"postgresql://default:9CtJML4fvQhB@ep-winter-truth-a4ygmkt9.us-east-1.aws.neon.tech:5432/verceldb?sslmode=require")
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
