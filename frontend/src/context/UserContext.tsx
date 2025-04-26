@@ -11,7 +11,7 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   const register = async (username: string, email: string, password: string, role:string) => {
     try {
-      const response = await fetch(`${URL}/auth/register`, {
+      const response = await fetch(`${URL}/api/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -20,39 +20,68 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       });
 
       if (!response.ok) {
-        throw new Error('Registration failed');
-      }
+        const errorData = await response.json();
+        console.error('Registration error:', errorData);
+        return {
+          status: response.status,
+          message: errorData.message,
+        }
 
-      const data: { user: User; token: string } = await response.json();
+      }
+      const data: { user: User; token: string, message: string } = await response.json();
+      console.log(data)
       setUser(data.user);
       setToken(data.token);
       localStorage.setItem('token', data.token);
+       return {
+        status: response.status,
+        message: data.message,
+      };
+
     } catch (error) {
       console.error('Error registering user:', error);
+      return {
+        status: 400, 
+        message: 'Registration failed. Please try again.',
+      };
     }
   };
 
-  const login = async (username: string, password: string) => {
+  const login = async (email: string, password: string) => {
+    console.log("loginrew");
+    console.log(email, password)
     try {
-      const response = await fetch(`${URL}/auth/login`, {
+      const response = await fetch(`${URL}/api/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ username, password }),
+        body: JSON.stringify({ email, password }),
       });
       console.log(response)
 
       if (!response.ok) {
-        throw new Error('Login failed');
+        const errorData = await response.json();
+        return {
+          status: response.status,
+          message: errorData.message,
+        };
       }
 
       const data: { user: User; token: string } = await response.json();
       setUser(data.user);
       setToken(data.token);
       localStorage.setItem('token', data.token);
+      return {
+        status: response.status,
+        message: 'Login successful',
+      };
     } catch (error) {
       console.error('Error logging in:', error);
+      return {
+        status: 400,
+        message: 'Login failed. Please check your credentials.',
+      };
     }
   };
 

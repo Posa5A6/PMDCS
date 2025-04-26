@@ -8,12 +8,31 @@ from wtforms.fields.datetime import DateField
 from wtforms.validators import DataRequired, Length, Email, EqualTo
 from flask_migrate import Migrate
 from config import Config
-from datetime import datetime, date
+from datetime import datetime, date, timedelta
 from sqlalchemy import func
 import psycopg2
+from flask import Flask, request, jsonify, flash, redirect, url_for
+from flask_cors import CORS
+import jwt
+
+
+# Secret key for encoding the JWT (keep it secure!)
+SECRET_KEY = 'your_super_secret_key'
+
+
+def generate_token(user_id):
+    payload = {
+        'user_id': user_id,
+        'exp': datetime.utcnow() + timedelta(days=1)  # Token expires in 1 day
+    }
+    token = jwt.encode(payload, SECRET_KEY, algorithm='HS256')
+    return token
+
+
 
 app = Flask(__name__)
 app.config.from_object(Config)
+CORS(app)
 
 db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)  # Initialize Bcrypt
@@ -26,6 +45,9 @@ migrate = Migrate(app, db)
 ROLE_ADMIN = 'admin'
 ROLE_DOCTOR = 'doctor'
 ROLE_PATIENT = 'patient'
+
+
+
 
 
 # User model
@@ -94,25 +116,27 @@ class PatientRecordForm(FlaskForm):
     submit = SubmitField('Save Record')
 
 
-
 class Appointment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     patient_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    doctor_name = db.Column(db.String(150), nullable=False)
-    hospital_id = db.Column(db.Integer, db.ForeignKey('hospital.id'), nullable=False)  # Add this line
+    doctor_name = db.Column(db.String(100), nullable=False)
+    hospital_id = db.Column(db.String(255), nullable=False)
     appointment_date = db.Column(db.Date, nullable=False)
     purpose_of_appointment = db.Column(db.String(255), nullable=False)
-    status = db.Column(db.String(50), default='Pending')
-    email = db.Column(db.String(150), nullable=False)
-    phone_number = db.Column(db.String(15), nullable=False)
+    email = db.Column(db.String(100), nullable=False)
+    phone_number = db.Column(db.String(20), nullable=False)
     address = db.Column(db.String(255), nullable=False)
     age = db.Column(db.Integer, nullable=False)
     gender = db.Column(db.String(10), nullable=False)
-    blood_group = db.Column(db.String(5), nullable=False)
+    blood_group = db.Column(db.String(10), nullable=False)
 
-    # Relationships
-    patient = db.relationship('User', backref='appointments')
-    hospital = db.relationship('Hospital', backref='appointments')  # Add this line for the relationship
+    def __repr__(self):
+        return f"<Appointment {self.id}>"
+
+
+
+
+
 
 
 # AppointmentForm (Updated with all required fields)
@@ -225,63 +249,125 @@ def home():
     return render_template('home.html')
 
 
-# Registration route
-@app.route('/register', methods=['GET', 'POST'])
+
+# Registration route (API version)
+@app.route('/api/register', methods=['POST'])
 def register():
-    form = RegistrationForm()
-    if form.validate_on_submit():
-        existing_user = User.query.filter(
-            (User.username == form.username.data) |
-            (User.email == form.email.data)
-        ).first()
-        if existing_user:
-            flash('Username or Email already exists. Please try again.', 'danger')
-        else:
-            hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')  # Hash the password
-            user = User(
-                username=form.username.data,
-                email=form.email.data,
-                password=hashed_password,
-                role=form.role.data.lower()  # Store role in lowercase
-            )
-            db.session.add(user)
-            db.session.commit()
-            flash('Registration successful! Please login.', 'success')
-            return redirect(url_for('login'))
-    return render_template('register.html', form=form)
+    data = request.get_json()  # Get data from JSON body
+    print(f"Received data: {data}")  # Debugging statement
+    # Validate that all required fields are present
+    if not all(field in data for field in ('username', 'email', 'password', 'role')):
+        return jsonify({"message": "Missing required fields!"}), 400
+
+    # Check if user already exists (by username or email)
+    existing_user = User.query.filter(
+        (User.username == data['username']) | 
+        (User.email == data['email'])
+    ).first()
+
+    if existing_user:
+        print(f"User already exists: {existing_user}")  # Debugging statement
+        return jsonify({"message": "Username or Email already exists."}), 400
+
+    # Hash the password before storing it
+    hashed_password = bcrypt.generate_password_hash(data['password']).decode('utf-8')
+
+    # Create new user instance
+    user = User(
+        username=data['username'],
+        email=data['email'],
+        password=hashed_password,
+        role=data['role'].lower()  # Store role in lowercase
+    )
+
+    try:
+        # Add user to the database and commit
+        db.session.add(user)
+        db.session.commit()
+
+        # Respond with success message
+        token = generate_token(user.id)
+        return jsonify({
+            "message": "Registration successful.",
+            "token": token,
+            "user": {
+            "username": user.username,
+            "email": user.email,
+            "role": user.role
+        }
+        }), 201
+
+    except Exception as e:
+        # If an error occurs during saving to the database
+        return jsonify({"message": "Server error."}), 500
 
 
-# Login route
-@app.route('/login', methods=['GET', 'POST'])
+# Login route (API version)
+@app.route('/api/login', methods=['POST'])
 def login():
-    form = LoginForm()
-    if form.validate_on_submit():
-        user = User.query.filter_by(email=form.email.data).first()
-        if user and bcrypt.check_password_hash(user.password, form.password.data):  # Verify hashed password
-            login_user(user)
-            print(f"Logged in user's role: {user.role}")  # Debugging statement
-            flash('Login successful!', 'success')
-            return redirect(url_for('dashboard'))
-        else:
-            flash('Login failed. Please check your credentials and try again.', 'danger')
-    return render_template('login.html', form=form)
+    data = request.get_json()  # Get JSON data from the request
 
+    # Validate that email and password are provided
+    if not all(field in data for field in ('email', 'password')):
+        return jsonify({"message": "Email and password are required!"}), 400
 
-# Dashboard route
-@app.route('/dashboard')
-@login_required
-def dashboard():
-    user_role = current_user.role.lower()
-    print(f"Dashboard accessed by user with role: {current_user.role}")  # Debugging statement
-    if user_role == ROLE_ADMIN:
-        return redirect(url_for('admin_dashboard'))
-    elif user_role == ROLE_DOCTOR:
-        return redirect(url_for('doctor_dashboard'))
-    elif user_role == ROLE_PATIENT:
-        return redirect(url_for('patient_dashboard'))
+    # Find user by email
+    user = User.query.filter_by(email=data['email']).first()
+
+    if user and bcrypt.check_password_hash(user.password, data['password']):
+        # Check password against the hash
+        login_user(user)  # Assuming you're using Flask-Login for session management
+
+        # Respond with success and user details (you can send a JWT if needed)
+        token = generate_token(user.id)
+        return jsonify({
+            "message": "Login successful!",
+            "token": token,
+            "user": {
+                "username": user.username,
+                "email": user.email,
+                "role": user.role,
+            }
+        }), 200
     else:
-        return redirect(url_for('home'))
+        # If login fails
+        return jsonify({"message": "Invalid credentials."}), 401
 
+
+
+@app.route('/api/dashboard', methods=['GET'])
+@login_required
+def api_dashboard():
+    user_role = current_user.role.lower()
+    print(f"Dashboard accessed by user with role: {current_user.role}")  # Debug
+
+    if user_role == ROLE_ADMIN:
+        return jsonify({
+            "message": "Welcome to the Admin Dashboard",
+            "role": user_role,
+            "redirect": "/api/admin/dashboard"
+        }), 200
+
+    elif user_role == ROLE_DOCTOR:
+        return jsonify({
+            "message": "Welcome to the Doctor Dashboard",
+            "role": user_role,
+            "redirect": "/api/doctor/dashboard"
+        }), 200
+
+    elif user_role == ROLE_PATIENT:
+        return jsonify({
+            "message": "Welcome to the Patient Dashboard",
+            "role": user_role,
+            "redirect": "/api/patient/dashboard"
+        }), 200
+
+    else:
+        return jsonify({
+            "message": "Unknown role. Redirecting to home.",
+            "role": user_role,
+            "redirect": "/"
+        }), 400
 
 @app.route('/admin_dashboard')
 @login_required
@@ -782,70 +868,98 @@ def doctor_edit_record(record_id):
         flash('You do not have access to this page.', 'danger')
         return redirect(url_for('index'))
 
-
-# Patient dashboard route
-@app.route('/patient_dashboard')
+@app.route('/api/patient/dashboard', methods=['GET'])
 @login_required
-def patient_dashboard():
+def api_patient_dashboard():
     user_role = current_user.role.lower()
-    print(f"Patient Dashboard accessed by user with role: {current_user.role}")  # Debugging statement
+    print(f"Patient Dashboard accessed by user with role: {current_user.role}")
+
     if user_role == ROLE_PATIENT:
-        return render_template('patient_dashboard.html')
+        return jsonify({
+            "message": "Welcome to your Patient Dashboard",
+            "user": {
+                "username": current_user.username,
+                "email": current_user.email,
+                "role": user_role
+            },
+            "dashboard_data": {
+                "upcoming_appointments": [],  # Add real data later
+                "medical_reports": [],
+                "doctor_notes": []
+            }
+        }), 200
     else:
-        flash("Unauthorized access to Patient dashboard!", "danger")
-        return redirect(url_for('home'))
+        return jsonify({
+            "error": "Unauthorized access. Only patients can view this dashboard."
+        }), 403
+    
 
 
-@app.route('/book_appointment', methods=['GET', 'POST'])
+@app.route('/api/patient/book-appointment', methods=['POST'])
 @login_required
-def book_appointment():
-    user_role = current_user.role.lower()
-    if user_role != ROLE_PATIENT:
-        flash("Only patients can book an appointment.", 'danger')
-        return redirect(url_for('dashboard'))
+def api_book_appointment():
+    if current_user.role.lower() != ROLE_PATIENT:
+        return jsonify({"error": "Only patients can book appointments"}), 403
 
-    form = AppointmentForm()
-    if form.validate_on_submit():
+    data = request.get_json()
+
+    try:
+        # Ensure doctor_id is an integer and valid
+        doctor_id = int(data.get('doctor_id'))  # Cast to integer
+        doctor = User.query.get(doctor_id)  # Retrieve doctor by ID
+        if not doctor:
+            return jsonify({"error": "Invalid doctor ID"}), 400
+
+        # Ensure age is an integer
+        age = int(data.get('age'))  # Cast age to integer
+        if age <= 0:
+            return jsonify({"error": "Invalid age value"}), 400
+
         appointment = Appointment(
             patient_id=current_user.id,
-            doctor_name=User.query.get(form.doctor_id.data).username,
-            hospital_id=form.hospital_id.data,
-            appointment_date=form.appointment_date.data,
-            purpose_of_appointment=form.purpose_of_appointment.data,
-            email=form.email.data,
-            phone_number=form.phone_number.data,
-            address=form.address.data,
-            age=int(form.age.data),
-            gender=form.gender.data,
-            blood_group=form.blood_group.data,
+            doctor_name=doctor.username,
+            hospital_id=data.get('hospital_id'),
+            appointment_date=data.get('appointment_date'),
+            purpose_of_appointment=data.get('purpose_of_appointment'),
+            email=data.get('email'),
+            phone_number=data.get('phone_number'),
+            address=data.get('address'),
+            age=age,  # Ensure age is an integer
+            gender=data.get('gender'),
+            blood_group=data.get('blood_group'),
         )
         db.session.add(appointment)
         db.session.commit()
-        flash('Appointment booked successfully!', 'success')
-        return redirect(url_for('view_appointments'))
-    return render_template('book_appointment.html', form=form)
 
-@app.route('/approve_appointment/<int:appointment_id>', methods=['POST'])
+        return jsonify({
+            "message": "Appointment booked successfully",
+            "appointment_id": appointment.id
+        }), 201
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+@app.route('/api/doctor/approve-appointment/<int:appointment_id>', methods=['POST'])
 @login_required
-def approve_appointment(appointment_id):
-    user_role = current_user.role.lower()
-    if user_role != ROLE_DOCTOR:
-        flash("Unauthorized access!", "danger")
-        return redirect(url_for('dashboard'))
+def api_approve_appointment(appointment_id):
+    if current_user.role.lower() != ROLE_DOCTOR:
+        return jsonify({"error": "Unauthorized access! Only doctors can approve appointments."}), 403
 
     appointment = Appointment.query.get_or_404(appointment_id)
 
-    # Only allow the doctor assigned to approve the appointment
+    # Ensure the doctor can only approve their own appointment
     if appointment.doctor_name != current_user.username:
-        flash("You can only approve your own appointments.", "danger")
-        return redirect(url_for('doctor_dashboard'))
+        return jsonify({"error": "You can only approve your own appointments."}), 403
 
+    # Update status to 'Approved'
     appointment.status = 'Approved'
     db.session.commit()
 
-    flash('Appointment approved successfully!', 'success')
-    return redirect(url_for('doctor_dashboard'))
-
+    return jsonify({
+        "message": "Appointment approved successfully",
+        "appointment_id": appointment.id
+    }), 200
 
 @app.route('/view_appointments', methods=['GET'])
 @login_required

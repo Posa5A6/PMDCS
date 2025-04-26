@@ -5,13 +5,15 @@ import { useId } from "react";
 import { Button } from "@/components/ui/button";
 import { useUser } from "@/context/UserContext";
 import { useNavigate } from "react-router";
+import { toast ,Toaster } from 'react-hot-toast';
+
 
 const LoginPage: React.FC = () => {
   const id = useId();
   const { login } = useUser();
   const navigate = useNavigate();
 
-  const [username, setUsername] = useState("");
+  const [mail, setMail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
 
@@ -19,8 +21,12 @@ const LoginPage: React.FC = () => {
     e.preventDefault();
 
     try {
-      await login(username, password); 
+      const { status, message }= await login(mail, password); 
+      if (status === 200) {
       navigate("/"); 
+      } else {
+         toast.error(message);
+      }
     } catch (err) {
       setError("Login failed. Please check your credentials.");
     }
@@ -28,18 +34,22 @@ const LoginPage: React.FC = () => {
 
   return (
     <div className="h-screen w-screen flex justify-center items-center">
+      <Toaster
+            position="top-right"
+            reverseOrder={false}
+          />
       <div className="w-72 mx-auto border px-3 py-6 rounded-md">
         <h1 className="text-xl text-center font-semibold">Login</h1>
         <form onSubmit={handleLogin} className="space-y-5">
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor={`${id}-username`}>Username</Label>
+              <Label htmlFor={`${id}-mail`}>Mail</Label>
               <Input
-                id={`${id}-username`}
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                placeholder="username"
-                type="username"
+                id={`${id}-mail`}
+                value={mail}
+                onChange={(e) => setMail(e.target.value)}
+                placeholder="mail"
+                type="mail"
                 required
               />
             </div>
