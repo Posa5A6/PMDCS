@@ -1,5 +1,6 @@
 .vercel
 
+migrations
 __pycache__/
 
 
