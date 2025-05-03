@@ -1,5 +1,3 @@
-
-```markdown
 # Medical Appointment System - Backend API
 
 A RESTful API for managing medical appointments, patient records, and hospital-doctor relationships.
@@ -20,6 +18,7 @@ A RESTful API for managing medical appointments, patient records, and hospital-d
 ├── .env
 ├── requirements.txt
 └── wsgi.py
+/frontend
 ```
 
 ## Prerequisites
@@ -91,8 +90,10 @@ gunicorn --bind 0.0.0.0:5000 wsgi:app
 **Sample Login Request:**
 ```json
 {
+  "username":"doc",
   "email": "doctor@hospital.com",
-  "password": "SecurePassword123!"
+  "password": "SecurePassword123!",
+  "role":"doctor"
 }
 ```
 
@@ -161,17 +162,4 @@ gunicorn --bind 0.0.0.0:5000 wsgi:app
   ```
 - **JWT Errors**: Check token expiration and secret keys
 - **CORS Errors**: Verify CORS_ORIGINS in .env matches frontend URL
-
-## License
-
-MIT License - See [LICENSE](LICENSE) for details
-```
-
-This README provides:
-- Clear setup instructions
-- API endpoint documentation
-- Example requests/responses
-- Troubleshooting guide
-- Testing instructions
-- License information
 
